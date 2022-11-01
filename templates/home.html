@@ -1,16 +1,35 @@
 {% extends 'base.html' %}
 
-{% block title %}HomePage{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        Welcome {{ user.username }}!
-        <p><a href="{% url 'logout' %}">Log Out</a></p>
-        <p><a href="{% url 'positions' %}">Jobs</a></p>
-    {% else %}
-        <p>You are not logged in</p>
-        <a href="{% url 'login' %}">Log-In</a>
-        <a href="{% url 'signup' %}">Sign-Up</a>
-        <a href="{% url 'hr_signup' %}">HR Sign-Up</a>
-    {% endif %}
+    <div class="d-flex justify-content-center align-items-center" style="margin-top: 2%">
+        <div class="card">
+            <div class="card-header">
+                <p class="text-center h5">
+                    {% if user.is_authenticated %}
+                        Welcome {{ user.username }}!
+                    {% else %}
+                        Welcome guest!
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="card-body">
+                {% if user.is_authenticated %}
+
+                    <p><a href="{% url 'positions' %}">Positions</a></p>
+
+                    {% if user.is_staff %}
+                        <p><a href="{% url 'registered_users' %}">Registered Users</a></p>
+                    {% endif %}
+
+                    <a href="{% url 'password_reset' %}">Password Reset</a>
+
+                {% else %}
+                    <p>Please Signup or Login to continue</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

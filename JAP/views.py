@@ -1,5 +1,7 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+
 from .forms import PositionForm
 from .models import PositionModel
 
@@ -19,3 +21,14 @@ def add_position(request):
         form = PositionForm()
 
     return render(request, "JAP/add_position.html", {'form': form})
+
+
+def registered_users(request):
+    return render(request, "JAP/registered_users.html",
+                  {'registered_users': Group.objects.get(name="User").user_set.all()})
+
+
+@login_required
+def profile(request):
+    return render(request, "profile.html",
+                  {'registered_users': Group.objects.get(name="User").user_set.all()})
