@@ -10,28 +10,47 @@
                     Positions
                 </p>
             </div>
+            {# Add Position button visible to staff only #}
             {% if user.is_superuser %}
-                <a href="{% url 'add_position' %}">Add Position</a>
-            {% else %}
-                <p>You can't add positions</p>
+                <a style="text-align: center; margin-top: 2%" href="{% url 'add_position' %}">
+                    <button>Add Position</button>
+                </a>
             {% endif %}
 
             <div class="card-body">
+                {# Position search input #}
+                <input type="text" id="position_search" onkeyup="pos_search_fun()"
+                       placeholder="Search positions" title="Type desired position parameters">
+                {# Positions table #}
                 <div class="table-responsive" style="text-align: center; max-height:550px;">
-                    <table class="table table-striped table-hover" style=" min-width: 800px">
+                    <table class="table table-striped table-hover" style=" min-width: 800px" id="positions_table">
                         <thead>
-                        <tr>
+                        <tr class="header">
                             <th>Job Title</th>
                             <th>City</th>
                             <th>Salary</th>
+                            {# Deletion column is visible if the user is staff #}
+                            {% if user.is_staff %}
+                                <th>Deletion</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
                         {% for position in positions %}
                             <tr>
-                                <th>{{ position.title }}</th>
-                                <th>{{ position.city }}</th>
-                                <th>{{ position.salary }}</th>
+                                <td>{{ position.title }}</td>
+                                <td>{{ position.city }}</td>
+                                <td>{{ position.salary }}</td>
+                                {# Deletion column is visible if the user is staff #}
+                                {% if user.is_staff %}
+                                    <td>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" name="position_id" value="{{ position.id }}">Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -41,4 +60,18 @@
         </div>
     </div>
 
+    {# Positions table search function. Reference:https://stackoverflow.com/a/51187875   #}
+    <script>
+        const pos_search_fun = () => {
+            const trs = document.querySelectorAll('#positions_table tr:not(.header)')
+            const filter = document.querySelector('#position_search').value
+            const regex = new RegExp(filter, 'i')
+            const isFoundInTds = td => regex.test(td.innerHTML)
+            const isFound = childrenArr => childrenArr.some(isFoundInTds)
+            const setTrStyleDisplay = ({style, children}) => {
+                style.display = isFound([...children]) ? '' : 'none'
+            }
+            trs.forEach(setTrStyleDisplay)
+        }
+    </script>
 {% endblock %}

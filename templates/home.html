@@ -18,14 +18,6 @@
             <div class="card-body">
                 {% if user.is_authenticated %}
 
-                    <p><a href="{% url 'positions' %}">Positions</a></p>
-
-                    {% if user.is_staff %}
-                        <p><a href="{% url 'registered_users' %}">Registered Users</a></p>
-                    {% endif %}
-
-                    <a href="{% url 'password_reset' %}">Password Reset</a>
-
                 {% else %}
                     <p>Please Signup or Login to continue</p>
                 {% endif %}

@@ -12,22 +12,33 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive" style="text-align: center; max-height:550px;">
+                    {# Users table (Staffs will not be visible on this table) #}
                     <table class="table table-striped table-hover" style=" min-width: 800px">
                         <thead>
                         <tr>
                             <th><b>#</b></th>
                             <th style="text-align: left">Username</th>
-                            <th>x</th>
+                            {# Deletion column is visible if the user is staff #}
+                            {% if user.is_staff %}
+                                <th>Deletion</th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody>
-                        {% for user in registered_users %}
+                        {% for reg_user in registered_users %}
                             <tr>
                                 <td style="width: 5%"><b>{{ forloop.counter }}</b></td>
-                                <td style="text-align: left">{{ user.username }}</td>
-                                <td>
-                                    x
-                                </td>
+                                <td style="text-align: left">{{ reg_user.username }}</td>
+                                {# Deletion column is visible if the user is staff #}
+                                {% if user.is_staff %}
+                                    <td>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" name="reg_user_id" value="{{ reg_user.id }}">Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>

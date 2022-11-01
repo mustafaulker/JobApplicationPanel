@@ -16,37 +16,55 @@
           href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.css">
 
     <title>
-        {% block title %}{% endblock %} - JAP
+        {% block title %}{% endblock %} | JAP
     </title>
 </head>
 
 <body>
+{# Navbar left side #}
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse" id="dual-collapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/" target="_self">Home</a>
+                <a class="nav-link" href="{% url 'home' %}" target="_self">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'positions' %}" target="_self">Positions</a>
             </li>
             {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'profile' %}" target="_self">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/" target="_self">Applicants</a>
-                </li>
+                {# Profile page is avaliable to users only #}
+                {% if not user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}" target="_self">Profile</a>
+                    </li>
+                {% endif %}
+                {# Registered Users and Applicants pages are avaliable to staff only #}
+                {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registered_users' %}" target="_self">Registered Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" target="_self">Applicants</a>
+                    </li>
+                {% endif %}
             {% endif %}
         </ul>
     </div>
+    {# Navbar menu button #}
     <div class="mx-auto order-0">
-        <a class="navbar-brand mx-auto" href="/">JobApplicationPanel</a>
         <button class="navbar-toggler second-button" type="button" data-bs-toggle="collapse"
                 data-bs-target="#dual-collapse" aria-controls="dual-collapse" aria-expanded="false">
             <div class="animated-icon"><span></span><span></span><span></span><span></span></div>
         </button>
     </div>
+
+    {# Navbar right side #}
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse" id="dual-collapse">
         <ul class="navbar-nav ms-auto">
+            {# Signup pages and login page are accessable if user is not logged in #}
             {% if user.is_authenticated %}
+                {# Block to add Change Password button on Profile page #}
+                {% block profile_change_pass %}{% endblock %}
                 <li class="nav-item">
                     <a class="nav-link has-tooltip-left" href="{% url 'logout' %}">Logout</a>
                 </li>
@@ -67,22 +85,10 @@
 
 {% block content %}{% endblock %}
 
-
-<footer class="bg-dark text-center text-white fixed-bottom">
-    <div class="text-center p-2 " style="background-color: rgba(0, 0, 0, 0.05);">
-        <p>
-            <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/mustafaulker"
-               target="_blank" role="button"><i class="fab fa-github"></i>
-            </a>
-            <a class="btn btn-outline-light btn-floating m-1" href="https://linkedin.com/in/mustafaulker"
-               target="_blank" role="button"><i class="fab fa-linkedin-in"></i>
-            </a>
-        </p>
-    </div>
-</footer>
 </body>
 </html>
 
+{# Navbar menu opener for mobile devices #}
 <script type="text/javascript">
     $(document).ready(function () {
         $('.second-button').on('click', function () {
