@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Positions{% endblock %}
+
+{% block content %}
+    <form method='POST'>
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

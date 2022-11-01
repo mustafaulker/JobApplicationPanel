@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Positions{% endblock %}
+
+{% block content %}
+    <table>
+        <thead>
+        <tr>
+            <th>Job Title</th>
+            <th>City</th>
+            <th>Salary</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for position in positions %}
+            <tr>
+                <th>{{ position.title }}</th>
+                <th>{{ position.city }}</th>
+                <th>{{ position.salary }}</th>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    {% if user.is_superuser %}
+        <a href="{% url 'add_position' %}">Add Position</a>
+    {% else %}
+        <p>You can't add positions</p>
+    {% endif %}
+
+{% endblock %}
