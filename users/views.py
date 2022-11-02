@@ -1,36 +1,44 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
+from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views import generic
+
+from .forms import SignUpForm, HRSignUpForm
 
 user_group, created = Group.objects.get_or_create(name="User")
 hr_group, created = Group.objects.get_or_create(name="HR")
 
 
-class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = "registration/signup.html"
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
 
-    def form_valid(self, form):
-        user = form.save()
-        user_group.user_set.add(user)
-        return super().form_valid(form)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.password = make_password(form.cleaned_data['password'])
+            user.save()
+            user_group.user_set.add(user)
+            return redirect('positions')
+    else:
+        form = SignUpForm()
+    return render(request, "registration/signup.html", {'form': form})
 
 
-class HRSignUpView(generic.CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = "registration/hr_signup.html"
+def hr_signup(request):
+    if request.method == 'POST':
+        form = HRSignUpForm(request.POST)
 
-    def form_valid(self, form):
-        form.instance.is_staff = True
-        user = form.save()
-        hr_group.user_set.add(user)
-        return super().form_valid(form)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.password = make_password(form.cleaned_data['password'])
+            user.save()
+            hr_group.user_set.add(user)
+            return redirect('positions')
+    else:
+        form = HRSignUpForm()
+    return render(request, "registration/hr_signup.html", {'form': form})
 
 
 @login_required
