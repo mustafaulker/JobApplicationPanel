@@ -63,3 +63,18 @@ def edit_profile(request):
         return redirect('profile')
 
     return render(request, "JAP/edit_profile.html", {'current_user': request.user})
+
+
+@login_required
+def edit_interests(request):
+    if request.method == 'POST' and 'delete_interest' in request.POST:
+        old_interest = request.POST['delete_interest']
+        request.user.interests.remove(old_interest)
+        request.user.save()
+
+    elif request.method == 'POST' and 'add_interest' in request.POST:
+        new_interest = request.POST['add_interest']
+        request.user.interests.append(new_interest)
+        request.user.save()
+
+    return render(request, "JAP/edit_interests.html", {'current_user': request.user})

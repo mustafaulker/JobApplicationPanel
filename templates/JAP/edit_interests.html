@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Interests{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center" style="margin-top: 2%">
+        <div class="card" style="max-width: 60%">
+            <div class="card-header">
+                <p class="text-center h5">
+                    Edit Interests
+                </p>
+            </div>
+
+            <div class="card-body">
+                <table>
+                    <tbody>
+                    {% for interest in current_user.interests %}
+                        <tr>
+                            <td>
+                                <div style="display: inline-block; width: 100%; text-align: right">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        {{ interest }} |
+                                        <button type="submit" name="delete_interest" value="{{ interest }}">Delete
+                                        </button>
+                                        <br><br>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <br>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="text" id="job_interest" name="add_interest"
+                           placeholder="Python Developer"
+                           title="Add job interests to filter them later on the Positions page">
+                    <button type="submit">Add</button>
+                </form>
+
+                <br>
+                <div style="display: inline-block; width: 100%; text-align: right">
+                    <a href="{% url 'profile' %}">
+                        <button>Go Profile</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

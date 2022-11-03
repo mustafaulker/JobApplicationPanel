@@ -17,8 +17,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="d-flex justify-content-center align-items-center" style="margin-top: 2%">
-        <div class="card">
+    <div class="d-flex justify-content-center align-items-center" style="margin-top: 2%;">
+        <div class="card" style="max-width: 60%">
             <div class="card-header">
                 <p class="text-center h5">
                     {{ current_user.username }}
@@ -29,71 +29,45 @@
                 <table>
                     <tbody>
                     <tr>
-                        <td>
-                            <b>First Name:</b>
-                        </td>
-                        <td>
-                            {{ current_user.first_name }}
-                        </td>
+                        <td><b>First Name:</b></td>
+                        <td>{{ current_user.first_name }}</td>
                     </tr>
                     <tr>
-                        <td>
-                            <b>Last Name:</b>
-                        </td>
-                        <td>
-                            {{ current_user.last_name }}
-                        </td>
+                        <td><b>Last Name:</b></td>
+                        <td>{{ current_user.last_name }}</td>
                     </tr>
                     <tr>
-                        <td>
-                            <b>Email:</b>
-                        </td>
-                        <td>
-                            {{ current_user.email }}
-                        </td>
+                        <td><b>Email:</b></td>
+                        <td>{{ current_user.email }}</td>
                     </tr>
                     <tr>
-                        <td>
-                            <b>Date of Birth:</b>
-                        </td>
-                        <td>
-                            {{ current_user.date_of_birth }}
-                        </td>
+                        <td><b>Date of Birth:</b></td>
+                        <td>{{ current_user.date_of_birth }}</td>
                     </tr>
                     <tr>
-                        <td>
-                            <b>Location:</b>
-                        </td>
-                        <td>
-                            {{ current_user.location }}
-                        </td>
+                        <td><b>Location:</b></td>
+                        <td>{{ current_user.location }}</td>
                     </tr>
                     <tr>
-                        <td>
-                            <b>Title:</b>
-                        </td>
-                        <td>
-                            {{ current_user.title }}
-                        </td>
+                        <td><b>Title:</b></td>
+                        <td>{{ current_user.title }}</td>
                     </tr>
                     <tr>
+                        <td><b>Interests:</b></td>
                         <td>
-                            <b>Interests:</b>
-                        </td>
-                        <td>
-                            {{ current_user.interests }}
+                            {% for inter in current_user.interests|default_if_none:'-' %}
+                                {{ inter }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
                         </td>
                     </tr>
                     </tbody>
                 </table>
-
-                {#                <form action="" method="post">#}
-                {#                    {% csrf_token %}#}
-                {#                    <input type="text" id="job_interest" name="add_interest"#}
-                {#                           placeholder="Python Developer"#}
-                {#                           title="Add job interests to filter them later on the Positions page">#}
-                {#                    <button type="submit">Add</button>#}
-                {#                </form>#}
+                <br>
+                <div style="display: inline-block; width: 100%; text-align: right">
+                    <a href="{% url 'edit_interests' %}">
+                        <button>Edit Interests</button>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

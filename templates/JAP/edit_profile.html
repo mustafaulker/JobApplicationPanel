@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center" style="margin-top: 2%">
+        <div class="card">
+            <div class="card-header">
+                <p class="text-center h5">
+                    Edit Profile
+                </p>
+            </div>
+
+            <div class="card-body">
+                <form action="" method="post">{% csrf_token %}
+                    <div style="display: inline-block; width: 100%; text-align: right">
+                        <label>First Name:
+                            <input type="text" value="{{ current_user.first_name }}"
+                                   name="new_first_name">
+                        </label>
+                    </div>
+                    <br><br>
+                    <div style="display: inline-block; width: 100%; text-align: right">
+                        <label>Last Name:
+                            <input type="text" value="{{ current_user.last_name }}"
+                                   name="new_last_name">
+                        </label>
+                    </div>
+                    <br><br>
+                    <div style="display: inline-block; width: 100%; text-align: right">
+                        <label>Email:
+                            <input type="email" value="{{ current_user.email }}"
+                                   name="new_email">
+                        </label>
+                    </div>
+                    <br><br>
+
+                    <div style="display: inline-block; width: 100%; text-align: right">
+                        <label>Location:
+                            <input type="text" value="{{ current_user.location }}"
+                                   name="new_location">
+                        </label>
+                    </div>
+                    <br><br>
+                    <div style="display: inline-block; width: 100%; text-align: right">
+                        <label>Title:
+                            <input type="text" value="{{ current_user.title }}"
+                                   name="new_title">
+                        </label>
+                    </div>
+                    <br><br>
+                    <div style="display: inline-block; width: 88%; text-align: right">
+                        <label>Date of Birth:
+                            <input type="date" value="{{ current_user.date_of_birth|date:'Y-m-d' }}"
+                                   name="new_date_of_birth">
+                        </label>
+                    </div>
+                    <br><br>
+                    <div style="display: inline-block; width: 100%; text-align: right">
+                        <button type="submit">Save</button>
+                    </div>
+                </form>
+                <br>
+                <div style="display: inline-block; width: 100%; text-align: right">
+                    <a href="{% url 'profile' %}">
+                        <button>Go Profile</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
