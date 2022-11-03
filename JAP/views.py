@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -43,5 +45,21 @@ def profile(request):
         new_interest = request.POST['add_interest']
         pass
 
-    return render(request, "profile.html",
-                  {'registered_users': Group.objects.get(name="User").user_set.all()})
+    return render(request, "profile.html", {'current_user': request.user})
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        request.user.first_name = request.POST['new_first_name']
+        request.user.last_name = request.POST['new_last_name']
+        request.user.email = request.POST['new_email']
+        request.user.location = request.POST['new_location']
+        request.user.title = request.POST['new_title']
+        request.user.date_of_birth = datetime.strptime(request.POST['new_date_of_birth'], '%Y-%m-%d')
+
+        request.user.save()
+
+        return redirect('profile')
+
+    return render(request, "JAP/edit_profile.html", {'current_user': request.user})

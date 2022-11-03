@@ -63,6 +63,8 @@
         <ul class="navbar-nav ms-auto">
             {# Signup pages and login page are accessable if user is not logged in #}
             {% if user.is_authenticated %}
+                {# Block to add Edit Profile button on Profile page #}
+                {% block profile_edit_profile %}{% endblock %}
                 {# Block to add Change Password button on Profile page #}
                 {% block profile_change_pass %}{% endblock %}
                 <li class="nav-item">
