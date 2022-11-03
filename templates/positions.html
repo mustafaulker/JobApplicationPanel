@@ -2,25 +2,39 @@
 
 {% block title %}Positions{% endblock %}
 
+{# Add Positions button on navbar #}
+{% block positions_add_pos %}
+    {# Add Position button visible to staff only #}
+    {% if user.is_superuser %}
+        <li class="nav-item">
+            <a class="nav-link has-tooltip-left" href="{% url 'add_position' %}">Add Position</a>
+        </li>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 2%">
         <div class="card">
             <div class="card-header">
-                <p class="text-center h5">
-                    Positions
-                </p>
+                <p class="text-center h5">Positions</p>
             </div>
-            {# Add Position button visible to staff only #}
-            {% if user.is_superuser %}
-                <a style="text-align: center; margin-top: 2%" href="{% url 'add_position' %}">
-                    <button>Add Position</button>
-                </a>
-            {% endif %}
 
             <div class="card-body">
+                <p>Filter Positions based on your interests</p>
+                {# Position filter checkboxes #}
+                <div style="overflow-y: scroll; height: 30%;width: 25%;
+                border: 2px solid #ccc; text-align: right;">
+                    {% for interest in user.interests %}
+                        <label>{{ interest }}
+                            <input type="checkbox" name="filter_positions" value="{{ interest }}"/>
+                        </label> <br>
+                    {% endfor %}
+                </div>
+                <br>
                 {# Position search input #}
                 <input type="text" id="position_search" onkeyup="pos_search_fun()"
                        placeholder="Search positions" title="Type desired position parameters">
+                <br><br>
                 {# Positions table #}
                 <div class="table-responsive" style="text-align: center; max-height:550px;">
                     <table class="table table-striped table-hover" style=" min-width: 800px" id="positions_table">
@@ -60,8 +74,8 @@
         </div>
     </div>
 
-    {# Positions table search function. Reference:https://stackoverflow.com/a/51187875   #}
-    <script>
+    {# Positions table search script. Reference:https://stackoverflow.com/a/51187875 #}
+    <script type="text/javascript">
         const pos_search_fun = () => {
             const trs = document.querySelectorAll('#positions_table tr:not(.header)')
             const filter = document.querySelector('#position_search').value
@@ -73,5 +87,25 @@
             }
             trs.forEach(setTrStyleDisplay)
         }
+    </script>
+    {# Positions table filtering script. Reference:https://gist.github.com/githamm/5ab3896276233ba37ed3 #}
+    <script type="text/javascript">
+        $(function () {
+            $('input[type="checkbox"]').change(function () {
+                if ($('input[type="checkbox"]:checked').length > 0) {
+                    var vals = $('input[type="checkbox"]:checked').map(function () {
+                        return this.value;
+                    }).get();
+
+                    $('tbody tr')
+                        .hide()
+                        .filter(function () {
+                            return vals.indexOf($(this).find('td:first').text()) > -1;
+                        }).show();
+                } else {
+                    $('tbody tr').show();
+                }
+            });
+        });
     </script>
 {% endblock %}

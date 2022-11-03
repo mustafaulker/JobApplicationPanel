@@ -4,11 +4,13 @@
 
 {% block content %}
     <div style="max-width: max-content; margin: 3% auto auto;">
-        <h2>Log-In</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Log In</button>
-        </form>
+        <div style="display: inline-block; width: 100%; text-align: right">
+            <h2>Log-In</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Log In</button>
+            </form>
+        </div>
     </div>
 {% endblock %}

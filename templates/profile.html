@@ -2,7 +2,7 @@
 
 {% block title %}Profile{% endblock %}
 
-
+{# Edit Profile button on navbar #}
 {% block profile_edit_profile %}
     <li class="nav-item">
         <a class="nav-link has-tooltip-left" href="{% url 'edit_profile' %}">Edit Profile</a>
@@ -20,9 +20,7 @@
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 2%;">
         <div class="card" style="max-width: 60%">
             <div class="card-header">
-                <p class="text-center h5">
-                    {{ current_user.username }}
-                </p>
+                <p class="text-center h5">{{ current_user.username }}</p>
             </div>
 
             <div class="card-body">

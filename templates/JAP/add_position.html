@@ -4,11 +4,20 @@
 
 {% block content %}
     <div style="max-width: max-content; margin: 3% auto auto;">
-        <h2>Add Position</h2>
-        <form method='POST'>
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Submit">
-        </form>
+        <div style="display: inline-block; width: 100%; text-align: right">
+            <h2>Add Position</h2>
+            <form method='POST'>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <br>
+        <br>
+        <div style="display: inline-block; width: 100%; text-align: right">
+            <a href="{% url 'positions' %}">
+                <button>Go Positions</button>
+            </a>
+        </div>
     </div>
 {% endblock %}
