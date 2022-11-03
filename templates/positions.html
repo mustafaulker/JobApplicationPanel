@@ -5,7 +5,7 @@
 {# Add Positions button on navbar #}
 {% block positions_add_pos %}
     {# Add Position button visible to staff only #}
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
         <li class="nav-item">
             <a class="nav-link has-tooltip-left" href="{% url 'add_position' %}">Add Position</a>
         </li>
@@ -20,23 +20,26 @@
             </div>
 
             <div class="card-body">
-                <p>Filter Positions based on your interests</p>
+                <div style="text-align: center">
+                    <p>Filter Positions based on your interests</p>
+                </div>
                 {# Position filter checkboxes #}
-                <div style="overflow-y: scroll; height: 30%;width: 25%;
-                border: 2px solid #ccc; text-align: right;">
+                <div style="overflow-y: scroll; max-height: 100px;width: 40%;
+                margin-left: 30%; margin-right: 30%; border: 2px solid #ccc; text-align: left;">
                     {% for interest in user.interests %}
-                        <label>{{ interest }}
+                        <label>
                             <input type="checkbox" name="filter_positions" value="{{ interest }}"/>
-                        </label> <br>
+                        </label> {{ interest }}<br>
                     {% endfor %}
                 </div>
-                <br>
                 {# Position search input #}
-                <input type="text" id="position_search" onkeyup="pos_search_fun()"
-                       placeholder="Search positions" title="Type desired position parameters">
-                <br><br>
+                <div style="text-align: center">
+                    <input style="margin-top: 20px; width: 50%" type="text" id="position_search"
+                           onkeyup="pos_search_fun()" placeholder="Search positions"
+                           title="Type desired position parameters">
+                </div>
                 {# Positions table #}
-                <div class="table-responsive" style="text-align: center; max-height:550px;">
+                <div class="table-responsive" style="text-align: center; max-height:550px;margin-top: 20px">
                     <table class="table table-striped table-hover" style=" min-width: 800px" id="positions_table">
                         <thead>
                         <tr class="header">
@@ -88,6 +91,7 @@
             trs.forEach(setTrStyleDisplay)
         }
     </script>
+
     {# Positions table filtering script. Reference:https://gist.github.com/githamm/5ab3896276233ba37ed3 #}
     <script type="text/javascript">
         $(function () {
