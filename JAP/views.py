@@ -6,14 +6,22 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 
+from users.models import CustomUser
 from .forms import PositionForm
-from .models import PositionModel
+from .models import PositionModel, ApplicationModel
 
 
 @login_required
 def positions(request):
-    if request.method == 'POST':
-        PositionModel.objects.filter(id=request.POST.get('position_id')).delete()
+    if request.method == 'POST' and 'delete_position' in request.POST:
+        PositionModel.objects.filter(id=request.POST.get('delete_position')).delete()
+    elif request.method == 'POST' and 'apply_position' in request.POST:
+
+        ApplicationModel.objects.create(
+            position_id=int(request.POST.get('apply_position')),
+            applicant_id=int(request.user.id),
+            application_date=datetime.now().date()
+        ).save()
     return render(request, "positions.html", {'positions': PositionModel.objects.all()})
 
 
@@ -41,10 +49,6 @@ def registered_users(request):
 
 @login_required
 def profile(request):
-    if request.method == 'POST':
-        new_interest = request.POST['add_interest']
-        pass
-
     return render(request, "profile.html", {'current_user': request.user})
 
 
@@ -68,8 +72,7 @@ def edit_profile(request):
 @login_required
 def edit_interests(request):
     if request.method == 'POST' and 'delete_interest' in request.POST:
-        old_interest = request.POST['delete_interest']
-        request.user.interests.remove(old_interest)
+        request.user.interests.remove(request.POST['delete_interest'])
         request.user.save()
 
     elif request.method == 'POST' and 'add_interest' in request.POST:
@@ -78,3 +81,21 @@ def edit_interests(request):
         request.user.save()
 
     return render(request, "JAP/edit_interests.html", {'current_user': request.user})
+
+
+@login_required
+def job_applications(request):
+    def map_applications(app_obj):
+        position_obj = PositionModel.objects.get(id=app_obj.position_id)
+        user_obj = CustomUser.objects.get(id=app_obj.applicant_id)
+        application_date = app_obj.application_date
+        application_id = app_obj.id
+        return user_obj, position_obj, application_date, application_id
+
+    applications_map = map(map_applications, ApplicationModel.objects.all())
+
+    if request.method == 'POST':
+        ApplicationModel.objects.get(id=request.POST['application_id']).delete()
+        return redirect(job_applications)
+
+    return render(request, 'JAP/job_applications.html', {'applications_map': applications_map})

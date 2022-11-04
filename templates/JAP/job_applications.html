@@ -6,13 +6,38 @@
     <div class="d-flex justify-content-center align-items-center" style="margin-top: 2%">
         <div class="card">
             <div class="card-header">
-                <p class="text-center h5">
-                    -
-                </p>
+                <p class="text-center h5">Applications and Applicant</p>
             </div>
 
             <div class="card-body">
-
+                <div class="table-responsive" style="text-align: center; max-height:550px;">
+                    <table class="table table-striped table-hover" style=" min-width: 800px">
+                        <thead>
+                        <tr>
+                            <th><b>Applicant Name</b></th>
+                            <th><b>Job Title</b></th>
+                            <th><b>Application Date</b></th>
+                            <th><b>Delete Application</b></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for application in applications_map %}
+                            <tr>
+                                <td><b>{{ application.0.first_name }} {{ application.0.last_name }}</b></td>
+                                <td>{{ application.1.position_title }}</td>
+                                <td>{{ application.2|date:'d.m.Y' }}</td>
+                                <td>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" name="application_id" value="{{ application.3 }}">Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

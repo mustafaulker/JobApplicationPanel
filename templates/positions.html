@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block title %}Positions{% endblock %}
 
@@ -49,21 +50,32 @@
                             {# Deletion column is visible if the user is staff #}
                             {% if user.is_staff %}
                                 <th>Deletion</th>
+                            {% elif not user.is_staff %}
+                                <th>Apply</th>
                             {% endif %}
                         </tr>
                         </thead>
                         <tbody>
                         {% for position in positions %}
                             <tr>
-                                <td>{{ position.title }}</td>
-                                <td>{{ position.city }}</td>
-                                <td>{{ position.salary }}</td>
+                                <td>{{ position.position_title }}</td>
+                                <td>{{ position.position_location }}</td>
+                                <td>₺ {{ position.position_salary|intcomma }}</td>
                                 {# Deletion column is visible if the user is staff #}
                                 {% if user.is_staff %}
                                     <td>
                                         <form method="post">
                                             {% csrf_token %}
-                                            <button type="submit" name="position_id" value="{{ position.id }}">Delete
+                                            <button type="submit" name="delete_position" value="{{ position.id }}">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                {% elif not user.is_staff %}
+                                    <td>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" name="apply_position" value="{{ position.id }}">Apply
                                             </button>
                                         </form>
                                     </td>
