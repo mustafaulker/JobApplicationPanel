@@ -132,3 +132,7 @@ LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = '/users/login'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+FIXTURE_DIRS = [
+    'fixtures',
+]
