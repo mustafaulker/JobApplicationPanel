@@ -51,7 +51,7 @@ def registered_users(request):
         ApplicationModel.objects.filter(applicant_id=request.POST.get('reg_user_id')).delete()
         get_user_model().objects.filter(id=request.POST.get('reg_user_id')).delete()
     return render(request, "JAP/registered_users.html",
-                  {'registered_users': Group.objects.get(name="User").user_set.all()})
+                  {'registered_users': CustomUser.objects.exclude(is_staff=True)})
 
 
 @login_required
