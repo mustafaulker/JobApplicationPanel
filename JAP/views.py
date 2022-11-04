@@ -13,6 +13,9 @@ from .models import PositionModel, ApplicationModel
 
 @login_required
 def positions(request):
+    application_objects = ApplicationModel.objects.filter(applicant_id=request.user.id)
+    position_ids_to_filter = [app_object.position_id for app_object in application_objects]
+
     if request.method == 'POST' and 'delete_position' in request.POST:
         PositionModel.objects.filter(id=request.POST.get('delete_position')).delete()
     elif request.method == 'POST' and 'apply_position' in request.POST:
@@ -22,7 +25,10 @@ def positions(request):
             applicant_id=int(request.user.id),
             application_date=datetime.now().date()
         ).save()
-    return render(request, "positions.html", {'positions': PositionModel.objects.all()})
+        return redirect(positions)
+
+    return render(request, "positions.html",
+                  {'positions': PositionModel.objects.exclude(id__in=position_ids_to_filter)})
 
 
 @staff_member_required
@@ -42,6 +48,7 @@ def add_position(request):
 @staff_member_required
 def registered_users(request):
     if request.method == 'POST':
+        ApplicationModel.objects.filter(applicant_id=request.POST.get('reg_user_id')).delete()
         get_user_model().objects.filter(id=request.POST.get('reg_user_id')).delete()
     return render(request, "JAP/registered_users.html",
                   {'registered_users': Group.objects.get(name="User").user_set.all()})
