@@ -90,7 +90,7 @@ def edit_interests(request):
     return render(request, "JAP/edit_interests.html", {'current_user': request.user})
 
 
-@login_required
+@staff_member_required
 def job_applications(request):
     def map_applications(app_obj):
         position_obj = PositionModel.objects.get(id=app_obj.position_id)
