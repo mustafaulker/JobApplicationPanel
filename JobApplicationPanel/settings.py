@@ -79,8 +79,8 @@ WSGI_APPLICATION = 'JobApplicationPanel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'JAP-DB',
         'USER': 'postgres',
+        'NAME': config("DB_NAME"),
         'PASSWORD': config("DB_PASSWORD")
     }
 }
